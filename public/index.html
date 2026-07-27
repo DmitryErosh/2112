@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeRoom - Приватный чат</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Экран входа -->
+        <div id="login-screen" class="screen active">
+            <h1>🔐 CodeRoom</h1>
+            <p>Создай комнату или войди по коду</p>
+            <input type="text" id="username" placeholder="Твое имя" maxlength="15">
+            <div class="actions">
+                <button onclick="createRoom()" class="btn-primary">🚀 Создать комнату</button>
+                <div class="join-box">
+                    <input type="text" id="room-code" placeholder="Код комнаты" maxlength="8" style="text-transform: uppercase;">
+                    <button onclick="joinRoom()" class="btn-secondary">🔓 Войти</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран чата -->
+        <div id="chat-screen" class="screen">
+            <header>
+                <div class="room-info">
+                    <span>Комната: <b id="display-room-code">---</b></span>
+                    <button onclick="copyCode()" class="icon-btn" title="Копировать код">📋</button>
+                </div>
+                <button onclick="leaveRoom()" class="btn-exit">🚪 Выход</button>
+            </header>
+            
+            <div id="messages" class="messages-area"></div>
+            
+            <div class="input-area">
+                <button onclick="toggleCodeMode()" id="code-mode-btn" title="Режим кода">&lt;/&gt;</button>
+                <textarea id="message-input" rows="1" placeholder="Сообщение..."></textarea>
+                <button onclick="sendMessage()" class="btn-send">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
