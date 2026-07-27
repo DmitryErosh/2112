@@ -1,0 +1,14 @@
+{
+  "name": "coderoom",
+  "version": "1.0.0",
+  "description": "Private chat rooms by code",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.6.1"
+  }
+}
