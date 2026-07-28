@@ -49,6 +49,27 @@ npm start
 
 Откройте браузер и перейдите по адресу: `http://localhost:3000`
 
+## Деплой
+
+Приложение развёрнуто на платформе **Render.com**:
+
+🔗 **Live Demo:** [CodeRoom на Render](https://coderoom.onrender.com)
+
+### Развёртывание на Render.com:
+
+1. Создайте новый аккаунт на [render.com](https://render.com)
+2. Нажмите "New +" → "Web Service"
+3. Подключите ваш GitHub репозиторий
+4. Настройте параметры:
+   - **Name:** coderoom
+   - **Environment:** Node
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+   - **Port:** 3000 (или используйте переменную окружения `PORT`)
+5. Нажмите "Create Web Service"
+
+Render автоматически построит и развернёт приложение.
+
 ## Использование
 
 1. Введите ваше имя пользователя
