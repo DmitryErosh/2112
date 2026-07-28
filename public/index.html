@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CodeRoom - Приватный чат</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -29,13 +29,18 @@
                     <span>Комната: <b id="display-room-code">---</b></span>
                     <button onclick="copyCode()" class="icon-btn" title="Копировать код">📋</button>
                 </div>
-                <button onclick="leaveRoom()" class="btn-exit">🚪 Выход</button>
+                <div class="header-actions">
+                    <button onclick="clearChat()" class="icon-btn clear-btn" title="Очистить чат">🗑️</button>
+                    <button onclick="leaveRoom()" class="btn-exit">🚪 Выход</button>
+                </div>
             </header>
             
             <div id="messages" class="messages-area"></div>
             
             <div class="input-area">
                 <button onclick="toggleCodeMode()" id="code-mode-btn" title="Режим кода">&lt;/&gt;</button>
+                <button onclick="document.getElementById('file-input').click()" class="btn-attach" title="Прикрепить файл">📎</button>
+                <input type="file" id="file-input" accept="image/*,audio/*" style="display: none;" onchange="handleFileSelect(event)">
                 <textarea id="message-input" rows="1" placeholder="Сообщение..."></textarea>
                 <button onclick="sendMessage()" class="btn-send">➤</button>
             </div>

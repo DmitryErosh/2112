@@ -12,6 +12,7 @@ const displayRoomCode = document.getElementById('display-room-code');
 const messagesDiv = document.getElementById('messages');
 const messageInput = document.getElementById('message-input');
 const codeModeBtn = document.getElementById('code-mode-btn');
+const fileInput = document.getElementById('file-input');
 
 // Создание комнаты
 function createRoom() {
@@ -42,6 +43,11 @@ function enterChat(username, code) {
     displayRoomCode.textContent = code;
     
     socket.emit('joinRoom', { username, roomCode: code });
+    
+    // Фокус на поле ввода для мобильных
+    setTimeout(() => {
+        messageInput.focus();
+    }, 300);
 }
 
 // Отправка сообщения
@@ -52,6 +58,49 @@ function sendMessage() {
     socket.emit('chatMessage', { text, isCode: isCodeMode });
     messageInput.value = '';
     messageInput.style.height = 'auto';
+}
+
+// Обработка выбора файла
+async function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+        const response = await fetch('/upload', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            return alert(error.error || 'Ошибка загрузки файла');
+        }
+        
+        const data = await response.json();
+        
+        // Отправляем сообщение с файлом
+        socket.emit('chatMessage', {
+            text: '',
+            isCode: false,
+            type: data.type,
+            fileUrl: data.url
+        });
+        
+        // Очищаем input
+        fileInput.value = '';
+    } catch (err) {
+        console.error('Upload error:', err);
+        alert('Ошибка загрузки файла');
+    }
+}
+
+// Очистка чата
+function clearChat() {
+    if (!confirm('Вы уверены, что хотите очистить весь чат?')) return;
+    socket.emit('clearChat', currentRoom);
 }
 
 // Переключение режима кода
@@ -85,6 +134,14 @@ socket.on('messageHistory', (history) => {
     scrollToBottom();
 });
 
+socket.on('chatCleared', () => {
+    messagesDiv.innerHTML = '';
+    const div = document.createElement('div');
+    div.className = 'system-msg';
+    div.textContent = 'Чат очищен';
+    messagesDiv.appendChild(div);
+});
+
 socket.on('systemMessage', (text) => {
     const div = document.createElement('div');
     div.className = 'system-msg';
@@ -105,7 +162,11 @@ function renderMessage(msg) {
     
     let content = `<div class="msg-header"><span>${msg.username}</span><span>${msg.time}</span></div>`;
     
-    if (msg.isCode) {
+    if (msg.type === 'image') {
+        content += `<div class="msg-text"><img src="${msg.fileUrl}" alt="Image" class="message-image"></div>`;
+    } else if (msg.type === 'audio') {
+        content += `<div class="msg-text"><audio controls src="${msg.fileUrl}" class="message-audio"></audio></div>`;
+    } else if (msg.isCode) {
         content += `<div class="msg-text"><pre class="code-block">${escapeHtml(msg.text)}</pre></div>`;
     } else {
         content += `<div class="msg-text">${escapeHtml(msg.text)}</div>`;
